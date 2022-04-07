@@ -1,5 +1,7 @@
 <?php
 require_once('MysqliDb.php');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 $action = 'adddb';
 $data = array();
@@ -80,7 +82,7 @@ function action_mod () {
     $data = $db->getOne ("users");
 }
 
-$db = new Mysqlidb ('localhost', 'root', '', 'testdb');
+$db = new Mysqlidb ('mysql', 'dbuser', 'password', 'testdb');
 if ($_GET) {
     $f = "action_".$_GET['action'];
     if (function_exists ($f)) {
@@ -109,13 +111,19 @@ if ($_GET) {
     </tr>
     <?php printUsers();?>
 
+    <?php 
+        $sq = $db->subQuery();
+        $sq->get("users");
+
+    ?>
+
 </table>
 <hr width=50%>
-<form action='index.php?action=<?php echo $action?>' method=post>
-    <input type=hidden name='id' value='<?php echo $data['id']?>'>
-    <input type=text name='login' required placeholder='Login' value='<?php echo $data['login']?>'>
-    <input type=text name='firstName' required placeholder='First Name' value='<?php echo $data['firstName']?>'>
-    <input type=text name='lastName' required placeholder='Last Name' value='<?php echo $data['lastName']?>'>
+<form action='index.php?action=<?= $action?>' method=post>
+    <input type=hidden name='id' value='<?= $data['id']?>'>
+    <input type=text name='login' required placeholder='Login' value='<?= $data['login'] ?? '' ?>'>
+    <input type=text name='firstName' required placeholder='First Name' value='<?= $data['firstName'] ?? '' ?>'>
+    <input type=text name='lastName' required placeholder='Last Name' value='<?= $data['lastName'] ?? ''  ?>'>
     <input type=password name='password' placeholder='Password'>
     <input type=submit value='New User'></td>
 </form>

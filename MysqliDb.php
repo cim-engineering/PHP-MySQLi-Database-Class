@@ -261,7 +261,7 @@ class MysqliDb
      * @param string $charset
      * @param string $socket
      */
-    public function __construct($host = null, $username = null, $password = null, $db = null, $port = null, $charset = 'utf8', $socket = null)
+    public function __construct( $host = null, $username = null, $password = null, $db = null, $port = null, $charset = 'utf8', $socket = null)
     {
         $isSubQuery = false;
 
@@ -551,7 +551,7 @@ class MysqliDb
      * @return string Contains the returned rows from the query.
      */
     public function rawAddPrefix($query){
-        $query = str_replace(PHP_EOL, null, $query);
+        $query = str_replace(PHP_EOL, '', $query);
         $query = preg_replace('/\s+/', ' ', $query);
         preg_match_all("/(from|into|update|join) [\\'\\´]?([a-zA-Z0-9_-]+)[\\'\\´]?/i", $query, $matches);
         list($from_table, $from, $table) = $matches;
@@ -1275,7 +1275,7 @@ class MysqliDb
      */
     public function groupBy($groupByField)
     {
-        $groupByField = preg_replace("/[^-a-z0-9\.\(\),_\* <>=!]+/i", '', $groupByField);
+        $groupByField = $groupByField = preg_replace("/[^-a-z0-9\.\(\),_\* <>=!\"']+/i", '', $groupByField);;
 
         $this->_groupBy[] = $groupByField;
         return $this;
